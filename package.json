@@ -1,8 +1,9 @@
 {
-  "name": "nlw-esports",
+  "name": "nlw-esports-server",
+  "type": "module",
   "version": "1.0.0",
   "description": "NLW-eSports",
-  "main": "index.js",
+  "main": "server.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
