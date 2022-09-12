@@ -2,7 +2,7 @@
   "name": "nlw-esports-server",
   "version": "1.0.0",
   "description": "NLW-eSports",
-  "main": "server.mjs",
+  "main": "server.ts",
   "scripts": {
     "build": "tsc",
     "dev": "tsnd src/server.ts"
