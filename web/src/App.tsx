@@ -1,3 +1,5 @@
+import "./styles/main.css"
+
 interface ButtonProps {
   title: string;
 }
