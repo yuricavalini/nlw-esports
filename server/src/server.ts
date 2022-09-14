@@ -34,7 +34,7 @@ app.get('/games/:id/ads', async (request, response) => {
       weekDays: true,
       useVoiceChannel: true,
       yearsPlaying: true,
-      hoursStart: true,
+      hourStart: true,
       hourEnd: true,
     },
     where: {
