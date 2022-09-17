@@ -9,7 +9,7 @@ import "./styles/main.css"
 import logoImg from './assets/logo-nlw-esports.svg'
 import { CreateAdModal } from './components/CreateAdModal'
 
-interface Game {
+export interface Game {
   id: string;
   title: string;
   bannerUrl: string;
@@ -30,8 +30,6 @@ function App() {
       })
   }, [])
   
-
-
   return (
     <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
       <img src={logoImg} alt="Logo" />
