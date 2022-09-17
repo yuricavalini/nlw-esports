@@ -12,6 +12,7 @@ import { THEME } from '../../theme';
 import { GameParams } from '../../@types/navigation';
 
 import { DuoCard, DuoCardProps } from '../../components/DuoCard';
+import { DuoMatch } from '../../components/DuoMatch';
 import { Background } from '../../components/Background';
 import { Heading } from '../../components/Heading';
 
@@ -19,6 +20,7 @@ import { Heading } from '../../components/Heading';
 
 export function Game() {
   const [duos, setDuos] = useState<DuoCardProps[]>([])
+  const [discordDuoSelected, setDiscordDuoSelected] = useState('1')
   
   const navigation = useNavigation()
   const route = useRoute()
@@ -87,6 +89,11 @@ export function Game() {
           )}
         />
         
+      <DuoMatch
+        visible={discordDuoSelected.length > 0}
+        discord="yuri#2323"
+        onClose={() => setDiscordDuoSelected('')}
+      />
       </SafeAreaView>
     </Background>
   )
