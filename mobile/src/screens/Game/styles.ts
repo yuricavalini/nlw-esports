@@ -32,7 +32,6 @@ export const styles = StyleSheet.create({
     width: '100%'
   },
   contentList: {
-    width: '100%',
     paddingLeft: 32,
     paddingRight: 64,
     alignItems: 'flex-start',
