@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, View, Image, FlatList, Text } from 'react-native'
+import { TouchableOpacity, View, Image, FlatList, Text, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native'
 import { Entypo } from '@expo/vector-icons'
@@ -21,23 +21,30 @@ import { Heading } from '../../components/Heading';
 export function Game() {
   const [duos, setDuos] = useState<DuoCardProps[]>([])
   const [discordDuoSelected, setDiscordDuoSelected] = useState('')
+  const [isLoadingGameAds, setIsLoadingGameAds] = useState(true)
   
   const navigation = useNavigation()
   const route = useRoute()
   const game = route.params as GameParams;
+
+  useEffect(() => {
+    async function fetchDataGameAds() {
+      setIsLoadingGameAds(true)
+
+      await fetch(`http://192.168.0.20:3333/games/${game.id}/ads`)
+      .then(response => response.json())
+      .then(data => setDuos(data))
+      .finally(() => setIsLoadingGameAds(false))
+    }
+    fetchDataGameAds();
+
+  }, [])
 
   async function getDiscordUser(adsId: string) {
     await fetch(`http://192.168.0.20:3333/ads/${adsId}/discord`)
       .then(response => response.json())
       .then(data => setDiscordDuoSelected(data.discord))
   }
-
-  useEffect(() => {
-    fetch(`http://192.168.0.20:3333/games/${game.id}/ads`)
-      .then(response => response.json())
-      .then(data => setDuos(data))
-    }, [])
-  
 
   function handleGoBack() {
     navigation.goBack( )
@@ -74,31 +81,36 @@ export function Game() {
           subtitle="Conecte-se e comece a jogar!"
         />
 
-        <FlatList
-          data={duos}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <DuoCard
-              data={item}
-              onConnect={() => getDiscordUser(item.id)}
-            />
-          )}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.containerList}
-          contentContainerStyle={[duos.length > 0 ? styles.contentList : styles.emptyListContent]}
-          ListEmptyComponent={() => (
-            <Text style={styles.emptyListText}>
-              Não há anúncios publicados ainda.
-            </Text>
-          )}
-        />
+        {!isLoadingGameAds ? (
+          <FlatList
+            data={duos}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+                <DuoCard
+                  data={item}
+                  onConnect={() => getDiscordUser(item.id)}
+                />
+              )}
+            horizontal
+            style={styles.containerList}
+            contentContainerStyle={
+              duos.length > 0
+                ? styles.contentList
+                : styles.emptyListContent}
+            showsHorizontalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <Text style={styles.emptyListText}>
+                Não há anúncios publicados ainda.
+              </Text>
+            )}
+          />
+        ) : <ActivityIndicator size={40} color={THEME.COLORS.PRIMARY} style={styles.emptyListContent} />}
         
-      <DuoMatch
-        visible={discordDuoSelected.length > 0}
-        discord={discordDuoSelected}
-        onClose={() => setDiscordDuoSelected('')}
-      />
+        <DuoMatch
+          visible={discordDuoSelected.length > 0}
+          discord={discordDuoSelected}
+          onClose={() => setDiscordDuoSelected('')}
+        />
       </SafeAreaView>
     </Background>
   )
