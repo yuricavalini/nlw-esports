@@ -19,10 +19,8 @@ export function SignIn() {
   async function handleDiscordSignIn() {
     const response = await AuthSession.startAsync({
       // https://discord.com/developers/applications
-      authUrl: 'https://discord.com/api/oauth2/authorize?client_id=1022902036720783380&redirect_uri=https%3A%2F%2Fauth.expo.io%2F%40yuriwlc%2Fmobile&response_type=token&scope=identify'
+      authUrl: process.env.AUTH_URL ?? ''
     })
-    
-    console.log(response);
 
     if (response.type === 'success') {
       fetch('https://discord.com/api/users/@me', {
@@ -32,7 +30,6 @@ export function SignIn() {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         navigation.navigate('home');
       })
     }
