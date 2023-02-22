@@ -1,5 +1,5 @@
-import { MagnifyingGlassPlus } from "phosphor-react";
-import * as Dialog from '@radix-ui/react-dialog'
+import { MagnifyingGlassPlus } from 'phosphor-react';
+import * as Dialog from '@radix-ui/react-dialog';
 
 export function CreateAdBanner() {
   return (
@@ -16,5 +16,5 @@ export function CreateAdBanner() {
         </Dialog.Trigger>
       </div>
     </div>
-  )
-} 
+  );
+}

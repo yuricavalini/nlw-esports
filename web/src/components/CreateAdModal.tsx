@@ -1,32 +1,33 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { Check, GameController } from 'phosphor-react'
-import axios from 'axios';
+import { Check, GameController } from 'phosphor-react';
+import axios, { AxiosResponse } from 'axios';
 
-import * as Dialog from "@radix-ui/react-dialog";
-import * as Checkbox from "@radix-ui/react-checkbox";
-import * as ToggleGroup from '@radix-ui/react-toggle-group'
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Checkbox from '@radix-ui/react-checkbox';
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
 
-import { Input } from './Form/Input'
-import { Game } from '../App';
-
-type GameOption = Omit<Game, 'bannerUrl' | '_count'>
+import { Input } from './Form/Input';
+import { GameOption } from '../interfaces/game';
 
 export function CreateAdModal() {
-  const [games, setGames] = useState<GameOption[]>([])
-  const [weekDays, setWeekDays] = useState<string[]>([])
-  const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false)
+  const [games, setGames] = useState<GameOption[]>([]);
+  const [weekDays, setWeekDays] = useState<string[]>([]);
+  const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     axios('http://localhost:3333/games')
-      .then((response) => setGames(response.data))
-  }, [])
+      .then((response: AxiosResponse<GameOption[], any>) => {
+        setGames(response.data);
+      });
+  }, []);
 
   async function handleCreateAd(event: FormEvent) {
     event.preventDefault();
 
     const htmlForm = event.target as HTMLFormElement;
-    const formData = new FormData(htmlForm)
-    const data = Object.fromEntries(formData)
+    const formData = new FormData(htmlForm);
+    const data = Object.fromEntries(formData);
 
     // Adicionar Validação
 
@@ -35,28 +36,28 @@ export function CreateAdModal() {
     }
 
     try {
-      await axios.post(`http://localhost:3333/games/${data.game}/ads`, {
+      await axios.post(`http://localhost:3333/games/${data.game.toString()}/ads`, {
         name: data.name,
         yearsPlaying: Number(data.yearsPlaying),
         discord: data.discord,
         weekDays: weekDays.map(Number),
         hourStart: data.hourStart,
         hourEnd: data.hourEnd,
-        useVoiceChannel: useVoiceChannel
-      })
+        useVoiceChannel,
+      });
 
-      alert('Anúncio criado com sucesso')
+      alert('Anúncio criado com sucesso');
     } catch (error) {
       console.error(error);
-      alert('Erro ao criar o anúncio.')      
+      alert('Erro ao criar o anúncio.');
     }
   }
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className='bg-black/60 inset-0 fixed' />
+      <Dialog.Overlay className="bg-black/60 inset-0 fixed" />
 
-      <Dialog.Content className='fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25'>
+      <Dialog.Content className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[480px] shadow-lg shadow-black/25">
         <Dialog.Title className="text-3xl font-black">Publique um anúncio</Dialog.Title>
 
         <form onSubmit={handleCreateAd} className="mt-8 flex flex-col gap-4">
@@ -65,14 +66,14 @@ export function CreateAdModal() {
             <select
               id="game"
               name="game"
-              className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500 appearance-none">
-              <option disabled defaultValue={''} >Selecione o game que deseja jogar</option>
+              className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500 appearance-none"
+            >
+              <option disabled defaultValue="">Selecione o game que deseja jogar</option>
 
               {games.map((game) => (
                 <option key={game.id} value={game.id}>{game.title}</option>
               ))}
             </select>
-            
           </div>
 
           <div className="flex flex-col gap-2">
@@ -109,49 +110,49 @@ export function CreateAdModal() {
                   value="0"
                   title="Domingo"
                   className={`w-8 h-8 rounded ${weekDays.includes('0') ? 'bg-violet-500' : 'bg-zinc-900'}`}
-                  >
+                >
                   D
                 </ToggleGroup.Item>
                 <ToggleGroup.Item
                   value="1"
                   title="Segunda"
                   className={`w-8 h-8 rounded ${weekDays.includes('1') ? 'bg-violet-500' : 'bg-zinc-900'}`}
-                  >
+                >
                   S
                 </ToggleGroup.Item>
                 <ToggleGroup.Item
                   value="2"
                   title="Terça"
                   className={`w-8 h-8 rounded ${weekDays.includes('2') ? 'bg-violet-500' : 'bg-zinc-900'}`}
-                  >
+                >
                   T
                 </ToggleGroup.Item>
                 <ToggleGroup.Item
                   value="3"
                   title="Quarta"
                   className={`w-8 h-8 rounded ${weekDays.includes('3') ? 'bg-violet-500' : 'bg-zinc-900'}`}
-                  >
+                >
                   Q
                 </ToggleGroup.Item>
                 <ToggleGroup.Item
                   value="4"
                   title="Quinta"
                   className={`w-8 h-8 rounded ${weekDays.includes('4') ? 'bg-violet-500' : 'bg-zinc-900'}`}
-                  >
+                >
                   Q
                 </ToggleGroup.Item>
                 <ToggleGroup.Item
                   value="5"
                   title="Sexta"
                   className={`w-8 h-8 rounded ${weekDays.includes('5') ? 'bg-violet-500' : 'bg-zinc-900'}`}
-                  >
+                >
                   S
                 </ToggleGroup.Item>
                 <ToggleGroup.Item
                   value="6"
                   title="Sábado"
                   className={`w-8 h-8 rounded ${weekDays.includes('6') ? 'bg-violet-500' : 'bg-zinc-900'}`}
-                  >
+                >
                   S
                 </ToggleGroup.Item>
               </ToggleGroup.Root>
@@ -165,12 +166,14 @@ export function CreateAdModal() {
             </div>
           </div>
 
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label className="mt-2 flex items-center gap-2 text-sm">
             <Checkbox.Root
               checked={useVoiceChannel}
-              onCheckedChange={(checked) => 
-                ((checked === true) ? setUseVoiceChannel(true) : setUseVoiceChannel(false))
-              }
+              onCheckedChange={(checked) => ((checked === true)
+                ? setUseVoiceChannel(true)
+                : setUseVoiceChannel(false)
+              )}
               className="w-6 h-6 p-1 rounded bg-zinc-900"
             >
               <Checkbox.Indicator>
@@ -198,5 +201,5 @@ export function CreateAdModal() {
         </form>
       </Dialog.Content>
     </Dialog.Portal>
-  )
+  );
 }
