@@ -1,0 +1,10 @@
+# compiled output
+/build
+
+# dependencies
+/node_modules
+package-lock.json
+yarn.lock
+
+tailwind.config.cjs
+postcss.config.cjs
