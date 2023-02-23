@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express'
 import cors from 'cors'
 
@@ -31,9 +32,9 @@ app.get('/games', async (request, response) => {
 app.post('/games/:id/ads', async (request, response) => {
   const gameId = request.params.id
   const body = request.body
-  
+
   // Adicionar Validação - Zod
-  
+
   const ad = await prisma.ad.create({
     data: {
       gameId,
@@ -43,7 +44,7 @@ app.post('/games/:id/ads', async (request, response) => {
       weekDays: body.weekDays.join(','),
       hourStart: convertHourStringToMinutes(body.hourStart),
       hourEnd: convertHourStringToMinutes(body.hourEnd),
-      useVoiceChannel: body.useVoiceChannel,
+      useVoiceChannel: body.useVoiceChannel
     }
   })
 
@@ -51,7 +52,7 @@ app.post('/games/:id/ads', async (request, response) => {
 })
 
 app.get('/games/:id/ads', async (request, response) => {
-  const gameId = request.params.id;
+  const gameId = request.params.id
 
   const ads = await prisma.ad.findMany({
     select: {
@@ -61,7 +62,7 @@ app.get('/games/:id/ads', async (request, response) => {
       useVoiceChannel: true,
       yearsPlaying: true,
       hourStart: true,
-      hourEnd: true,
+      hourEnd: true
     },
     where: {
       gameId
@@ -86,7 +87,7 @@ app.get('/ads/:id/discord', async (request, response) => {
 
   const ad = await prisma.ad.findUniqueOrThrow({
     select: {
-      discord: true,
+      discord: true
     },
     where: {
       id: adId
