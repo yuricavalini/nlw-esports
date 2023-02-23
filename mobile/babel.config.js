@@ -1,6 +1,15 @@
-module.exports = function(api) {
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+// eslint-disable-next-line func-names
+module.exports = function (api) {
   api.cache(true);
   return {
     presets: ['babel-preset-expo'],
+    plugins: [
+      ['module:react-native-dotenv', {
+        moduleName: 'react-native-dotenv',
+        path: '.env',
+      }],
+    ],
   };
 };

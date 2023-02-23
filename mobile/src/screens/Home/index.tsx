@@ -9,21 +9,22 @@ import { GameCard, GameCardProps } from '../../components/GameCard';
 import { Background } from '../../components/Background';
 import { Heading } from '../../components/Heading';
 
-import { styles } from './styles'
+import { styles } from './styles';
 
 export function Home() {
-  const [games, setGames] = useState<GameCardProps[]>([])
+  const [games, setGames] = useState<GameCardProps[]>([]);
 
   useEffect(() => {
     fetch('http://192.168.0.20:3333/games')
-      .then(response => response.json())
-      .then(data => {
-        setGames(data)
+      .then((response) => response.json())
+      .then((data: GameCardProps[]) => {
+        setGames(data);
       })
-    }, [])
-  
-  const navigation = useNavigation()
-  
+      .catch((err) => console.error(err));
+  }, []);
+
+  const navigation = useNavigation();
+
   function handleOpenGame({ id, title, bannerUrl }: GameCardProps) {
     navigation.navigate('game', { id, title, bannerUrl });
   }
@@ -43,7 +44,7 @@ export function Home() {
 
         <FlatList
           data={games}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <GameCard
               data={item}

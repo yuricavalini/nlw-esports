@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, View, Image, FlatList, Text, ActivityIndicator } from 'react-native'
+import {
+  TouchableOpacity, View, Image, FlatList, Text, ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation } from '@react-navigation/native'
-import { Entypo } from '@expo/vector-icons'
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { Entypo } from '@expo/vector-icons';
 
-import logoImg from '../../assets/logo-nlw-esports.png'
+import logoImg from '../../assets/logo-nlw-esports.png';
 
 import { styles } from './styles';
 import { THEME } from '../../theme';
@@ -16,38 +18,35 @@ import { DuoMatch } from '../../components/DuoMatch';
 import { Background } from '../../components/Background';
 import { Heading } from '../../components/Heading';
 
-
-
 export function Game() {
-  const [duos, setDuos] = useState<DuoCardProps[]>([])
-  const [discordDuoSelected, setDiscordDuoSelected] = useState('')
-  const [isLoadingGameAds, setIsLoadingGameAds] = useState(true)
-  
-  const navigation = useNavigation()
-  const route = useRoute()
+  const [duos, setDuos] = useState<DuoCardProps[]>([]);
+  const [discordDuoSelected, setDiscordDuoSelected] = useState('');
+  const [isLoadingGameAds, setIsLoadingGameAds] = useState(true);
+
+  const navigation = useNavigation();
+  const route = useRoute();
   const game = route.params as GameParams;
 
   useEffect(() => {
     async function fetchDataGameAds() {
-      setIsLoadingGameAds(true)
+      setIsLoadingGameAds(true);
 
       await fetch(`http://192.168.0.20:3333/games/${game.id}/ads`)
-      .then(response => response.json())
-      .then(data => setDuos(data))
-      .finally(() => setIsLoadingGameAds(false))
+        .then((response) => response.json())
+        .then((data: DuoCardProps[]) => setDuos(data))
+        .finally(() => setIsLoadingGameAds(false));
     }
-    fetchDataGameAds();
-
-  }, [])
+    fetchDataGameAds().catch((err) => console.error(err));
+  }, [game]);
 
   async function getDiscordUser(adsId: string) {
     await fetch(`http://192.168.0.20:3333/ads/${adsId}/discord`)
-      .then(response => response.json())
-      .then(data => setDiscordDuoSelected(data.discord))
+      .then((response) => response.json())
+      .then((data: { discord: string }) => setDiscordDuoSelected(data.discord));
   }
 
   function handleGoBack() {
-    navigation.goBack( )
+    navigation.goBack();
   }
 
   return (
@@ -84,28 +83,36 @@ export function Game() {
         {!isLoadingGameAds ? (
           <FlatList
             data={duos}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-                <DuoCard
-                  data={item}
-                  onConnect={() => getDiscordUser(item.id)}
-                />
-              )}
+              <DuoCard
+                data={item}
+                onConnect={() => getDiscordUser(item.id)}
+              />
+            )}
             horizontal
             style={styles.containerList}
             contentContainerStyle={
               duos.length > 0
                 ? styles.contentList
-                : styles.emptyListContent}
+                : styles.emptyListContent
+            }
             showsHorizontalScrollIndicator={false}
+            // eslint-disable-next-line react/no-unstable-nested-components
             ListEmptyComponent={() => (
               <Text style={styles.emptyListText}>
                 Não há anúncios publicados ainda.
               </Text>
             )}
           />
-        ) : <ActivityIndicator size={40} color={THEME.COLORS.PRIMARY} style={styles.emptyListContent} />}
-        
+        ) : (
+          <ActivityIndicator
+            size={40}
+            color={THEME.COLORS.PRIMARY}
+            style={styles.emptyListContent}
+          />
+        )}
+
         <DuoMatch
           visible={discordDuoSelected.length > 0}
           discord={discordDuoSelected}
@@ -113,5 +120,5 @@ export function Game() {
         />
       </SafeAreaView>
     </Background>
-  )
+  );
 }

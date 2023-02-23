@@ -1,12 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { THEME } from '../../theme';
 
-
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    padding: 32
+    padding: 32,
   },
   logo: {
     width: 214,
@@ -21,12 +20,12 @@ export const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.PRIMARY,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   buttonTitle: {
     color: THEME.COLORS.TEXT,
     fontFamily: THEME.FONT_FAMILY.SEMI_BOLD,
     fontSize: THEME.FONT_SIZE.SM,
-    marginLeft: 8
-  }
+    marginLeft: 8,
+  },
 });
